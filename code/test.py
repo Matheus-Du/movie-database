@@ -21,22 +21,32 @@ def connect(path):
     return
 
 
-def test_connection():
-    # test the connection of the DB
-    query = "SELECT * FROM Movies LIMIT 5; "
+def get_movie_info(movieName):
+    # return info about a movie based on the user input of the movie title
+    global connection, cursor
+
+    query = "SELECT title, release_year, genre, country, description, avg_rating " \
+            "FROM Movies WHERE title = '{}' COLLATE NOCASE; ".format(movieName)
     cursor.execute(query)
     connection.commit()
     rows = cursor.fetchall()
-    for row in rows:
-        print(row)
+
+    if len(rows) == 0:
+        print("Error: no movies with that title")
+    else:
+        for row in rows:
+            print(row)
+
     return
 
 
-
 def main():
+    global connection, cursor
+
     path = './movies.db'
     connect(path)
-    test_connection()
+    movieName = input("Enter the name of a movie: ")
+    get_movie_info(movieName)
 
     return
 
