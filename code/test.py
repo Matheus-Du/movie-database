@@ -25,8 +25,8 @@ def get_movie_info(movieName):
     # return info about a movie based on the user input of the movie title
     global connection, cursor
 
-    query = "SELECT title, release_year, genre, country, description, avg_rating " \
-            "FROM Movies WHERE title = '{}' COLLATE NOCASE; ".format(movieName)
+    query = "SELECT title, release_year, genre, release_country, description, avg_score " \
+            "FROM Movies WHERE title LIKE '%{}%' COLLATE NOCASE; ".format(movieName)
     cursor.execute(query)
     connection.commit()
     rows = cursor.fetchall()
@@ -35,8 +35,8 @@ def get_movie_info(movieName):
         print("Error: no movies with that title")
     else:
         for row in rows:
-            print("Title: {} \nRelease Year: {} \nGenre: {} \nCountry of Release: {} "
-                  "\nDescription: {} \nAverage Rating: {}\n"
+            print("\nTitle: {} \nRelease Year: {} \nGenre: {} \nCountry of Release: {} "
+                  "\nDescription: {} \nAverage Rating: {}"
                   .format(row[0], row[1], row[2], row[3], row[4], row[5]))
 
     return
