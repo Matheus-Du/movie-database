@@ -21,6 +21,28 @@ def connect(path):
     return
 
 
+def get_movie_by_actor(actorName):
+    # return info about a movie based on the name of an actor
+    global connection, cursor
+    '''
+    query = "SELECT title, release_year, genre, release_country, actors, description, avg_score" \
+            "FROM Movies WHERE actors LIKE '%{}%' COLLATE NOCASE;".format(actorName)'''
+    query = "SELECT title, release_year, genre, actors, description, avg_score " \
+            "FROM Movies WHERE actors LIKE '%{}%' COLLATE NOCASE".format(actorName)
+    cursor.execute(query)
+    connection.commit()
+    rows = cursor.fetchall()
+
+    if len(rows) == 0:
+        print("ERROR: no movie exists with that name or actor")
+    else:
+        for row in rows:
+            print("Title: {} \nRelease year: {} \nGenre: {} \nActors: {} \nDescription: {} \nAverage score: {}\n"
+                  .format(row[0], row[1], row[2], row[3], row[4], row[5]))
+
+    return
+
+
 def get_movie_info(movieName):
     # return info about a movie based on the user input of the movie title
     global connection, cursor
@@ -32,7 +54,8 @@ def get_movie_info(movieName):
     rows = cursor.fetchall()
 
     if len(rows) == 0:
-        print("Error: no movies with that title")
+        # if no results for movie title, search by actor names
+        get_movie_by_actor(movieName)
     else:
         for row in rows:
             print("\nTitle: {} \nRelease Year: {} \nGenre: {} \nCountry of Release: {} "
